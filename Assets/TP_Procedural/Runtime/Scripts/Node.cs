@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Node : MonoBehaviour
+public class Node
 {
     private enum TYPE
     {
@@ -13,17 +13,20 @@ public class Node : MonoBehaviour
     }
     private TYPE nodeType = TYPE.START;
 
-    private int _difficulty = 0;
-
-    // Start is called before the first frame update
-    void Start()
+    private enum DIRECTION
     {
-        
+        TOP,
+        BOTTOM,
+        RIGHT,
+        LEFT
     }
+    private DIRECTION nodeDirection = DIRECTION.RIGHT;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    private Node targetedNode = null;
+
+    private bool linkedToTarget = false;
+    
+    private int difficulty = 0;
+
+    private Connection[] connections;
 }
