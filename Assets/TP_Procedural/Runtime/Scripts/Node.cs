@@ -1,10 +1,15 @@
-﻿using UnityEngine;
-
-public enum NodeType {
+﻿public enum NodeType {
     Start,
     End,
     Door,
     Key
+}
+
+public enum NodeDirection {
+    Top,
+    Right,
+    Bottom,
+    Left
 }
 
 public enum NodeDifficulty {
@@ -13,10 +18,12 @@ public enum NodeDifficulty {
     Hard
 }
 
-public class Node : MonoBehaviour {
-    public int posX;
-    public int posY;
-    public NodeType type = NodeType.Start;
-    public NodeDifficulty difficulty = 0;
-    
+public class Node {
+    public int PosX;
+    public int PosY;
+    public NodeType          Type = NodeType.Start;
+    public NodeDifficulty    Difficulty = 0;
+    //public NodeDirection     NextNodeDirection = NodeDirection.Right;
+    //public Node              NextNode;
+    public Connection[]      Connections;
 }
