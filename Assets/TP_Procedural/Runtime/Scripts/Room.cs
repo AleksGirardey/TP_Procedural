@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Room : MonoBehaviour {
 
-    public bool isStartRoom = false;
+    public bool isStartRoom;
 	public Vector2Int position = Vector2Int.zero;
 
 	private TilemapGroup _tilemapGroup;

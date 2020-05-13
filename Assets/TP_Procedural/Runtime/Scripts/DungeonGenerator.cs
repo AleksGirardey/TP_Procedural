@@ -7,8 +7,9 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class DungeonGenerator : MonoBehaviour {
+    public static DungeonGenerator Instance;
+    
     [Header("-- Generation Parameters --")]
-    [ReadOnly(true)] public int seed;
     [Range(3, 30)] public int dungeonSize;
     [Range(1, 10)] public int lockedDoors;
     public int distanceMinBetweenStartAndEnd = 5;
@@ -21,21 +22,20 @@ public class DungeonGenerator : MonoBehaviour {
     public float offsetBetweenSprite;
 
     public Text textTries;
-    
-    //[HideInInspector]
     public List<Node> dungeonMap;
 
     private Node _spawnNode;
     private Node _exitNode;
     private bool _isNewGeneration;
-    private int generationIteration = 0;
+    private int generationIteration;
 
     private void Awake() {
-        if (seed == 0)
-            NewSeed();
-        // if (percentageBySegments.Length != lockedDoors) {
-        //     equalSplit = true;
-        // }
+        if (Instance == null) Instance = this;
+        if (Instance != this) Destroy(gameObject);
+        
+        if (LevelParameters.Instance.seed == 0) NewSeed();
+
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Start() {
@@ -85,7 +85,7 @@ public class DungeonGenerator : MonoBehaviour {
 
     private void NewSeed() {
         Random.InitState(DateTime.Now.Millisecond);
-        seed = Random.Range(100000, 1000000);
+        LevelParameters.Instance.seed = Random.Range(100000, 1000000);
     }
 
     private bool GenerateDungeon() {
@@ -96,7 +96,7 @@ public class DungeonGenerator : MonoBehaviour {
         Node lastNode;
         bool isDefined = true;
         
-        Random.InitState(seed);
+        Random.InitState(LevelParameters.Instance.seed);
         _isNewGeneration = true;
         
         lastNode = InitSpawn();
