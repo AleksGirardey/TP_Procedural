@@ -238,8 +238,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 53.95999, y: -6.2599945}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 4, y: -38.8}
+  m_SizeDelta: {x: 160, y: 141.4}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &355929805
 MonoBehaviour:
@@ -532,11 +532,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d97929d68a060b4d89df998de5a9b60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dungeonSize: 6
+  applicationQuit: 0
   lockedDoors: 1
   distanceMinBetweenStartAndEnd: 5
   maxIteration: 4
   prefabSpawn: {fileID: 9015248085823873627, guid: b54f7bfdd3b17bd4aad027bf6b8b7039,
+    type: 3}
+  prefabBranch: {fileID: 9015248085823873627, guid: 183cf4cfc4e85844d88a6cb3798bd34e,
+    type: 3}
+  prefabKey: {fileID: 9015248085823873627, guid: 99e128214244f9e4cbc44c98905bc9f9,
     type: 3}
   prefabExit: {fileID: 3778625434825841146, guid: 067a95bb5b943964bb89835298180577,
     type: 3}
@@ -640,7 +644,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ef56b03377bed446b323b812d9b9143, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentLevel: 0
+  sizeRatio: 0.3
+  branchesRatio: 0.5
+  branchLengthRatio: 0.2
   seed: 0
+  levelSize: 5
+  levelBranches: 2
+  levelBranchLength: 3
 --- !u!4 &1679257250
 Transform:
   m_ObjectHideFlags: 0

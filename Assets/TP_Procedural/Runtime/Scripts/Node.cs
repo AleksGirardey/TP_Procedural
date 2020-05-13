@@ -22,6 +22,8 @@ public enum NodeDifficulty {
 
 public class Node {
     public RoomTag RoomTags;
+
+    public bool isBranch;
     
     public int PosX;
     public int PosY;
@@ -37,5 +39,12 @@ public class Node {
 
     public void SetFlag(RoomTag tag) {
         RoomTags = tag;
+    }
+
+    public void SetLocked() {
+        if (RoomTags.HasFlag(RoomTag.HasTopDoor)) AddFlag(RoomTag.TopDoorLocked);
+        if (RoomTags.HasFlag(RoomTag.HasRightDoor)) AddFlag(RoomTag.RightDoorLocked);
+        if (RoomTags.HasFlag(RoomTag.HasBottomDoor)) AddFlag(RoomTag.BottomDoorLocked);
+        if (RoomTags.HasFlag(RoomTag.HasLeftDoor)) AddFlag(RoomTag.LeftDoorLocked);
     }
 }
