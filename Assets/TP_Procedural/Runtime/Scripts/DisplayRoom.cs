@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class DisplayRoom : MonoBehaviour
@@ -7,18 +8,10 @@ public class DisplayRoom : MonoBehaviour
     public int tailleX;
     public int tailleY;
     public int cell;
+    public bool debug;
     List<GameObject> allRoomInDungeons = new List<GameObject>();
+    public List<RoomSettings> roomPrefabs = new List<RoomSettings>();
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Z))
-        {
-            if(DungeonGenerator.Instance.dungeonMap != null)
-            {
-
-            }
-        }
-    }
 
     private void Display(List<Node> room, float sizeRoomX, float sizeRoomY)
     {
@@ -30,16 +23,25 @@ public class DisplayRoom : MonoBehaviour
         }
     }
 
-    private GameObject CreateRoom()
+
+    public GameObject GetRoom(Node node)
     {
-        GameObject a = null;
-        return a;
+        GameObject result;
+        foreach (RoomSettings roomS in roomPrefabs)
+        {
+            if (node.RoomTags == roomS.RoomTags)
+            {
+                result = roomS.Room;
+                return result;
+            }
+        }
+        return null;
     }
 
 
     private void OnDrawGizmos()
     {
-        if(DungeonGenerator.Instance.dungeonMap != null)
+        if(debug)
         {
             Display(DungeonGenerator.Instance.dungeonMap, tailleX, tailleY);
         }
