@@ -20,7 +20,8 @@ public enum NodeDifficulty {
     IsExit = 512
 }
 
-public class Node {
+public class Node 
+{
     public RoomTag RoomTags;
 
     public bool isBranch;
