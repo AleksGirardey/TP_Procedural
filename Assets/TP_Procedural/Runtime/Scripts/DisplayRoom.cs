@@ -15,7 +15,7 @@ public class DisplayRoom : MonoBehaviour
         {
             if(DungeonGenerator.Instance.dungeonMap != null)
             {
-                
+
             }
         }
     }
