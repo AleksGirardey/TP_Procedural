@@ -14,6 +14,11 @@ public class DisplayRoom : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Z)) {
             Display(DungeonGenerator.Instance.dungeonMap, tailleX, tailleY);
         }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            DeleteDisplay();
+
+        }
     }
 
     public void Display() {
@@ -31,6 +36,13 @@ public class DisplayRoom : MonoBehaviour {
         }
     }
 
+    public void DeleteDisplay()
+    {
+        for (int i = 0; i < allRoomInDungeons.Count; i++)
+        {
+            Destroy(allRoomInDungeons[i]);
+        }
+    }
 
     private GameObject GetRoom(Node node)
     {
