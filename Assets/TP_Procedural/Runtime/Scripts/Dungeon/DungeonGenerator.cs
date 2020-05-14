@@ -35,12 +35,15 @@ public class DungeonGenerator : MonoBehaviour {
 
     private Node _spawnNode;
 
+    private DisplayRoom _displayRoom;
+
     private void Awake() {
         if (Instance == null) Instance = this;
         if (Instance != this) Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);
         _mainCamera = Camera.main;
+        _displayRoom = GetComponent<DisplayRoom>();
     }
 
     private void Start() {
@@ -60,7 +63,7 @@ public class DungeonGenerator : MonoBehaviour {
     }
 
     private void Update() {
-        if (_isNewGeneration && debug)
+        if (_isNewGeneration)
             DisplayDungeon();
         if (applicationQuit) StopCoroutine(_generationCoroutine);
     }
@@ -96,43 +99,47 @@ public class DungeonGenerator : MonoBehaviour {
         while (transform.childCount != 0)
             DestroyImmediate(transform.GetChild(0).gameObject);
     }
-    
+
     private void DisplayDungeon() {
-        textTries.text = $"Level : {LevelParameters.Instance.currentLevel}\n" +
-                         $"  Essaies : {_generationIteration}\n" +
-                         $"  Level Size : {LevelParameters.Instance.levelSize} => {Mathf.RoundToInt(LevelParameters.Instance.levelSize)}\n" +
-                         $"  Branches : {LevelParameters.Instance.levelBranches} => {Mathf.RoundToInt(LevelParameters.Instance.levelBranches)}\n" +
-                         $"  Branches Length : {LevelParameters.Instance.levelBranchLength} => {Mathf.RoundToInt(LevelParameters.Instance.levelBranchLength)}\n";
-
-        foreach (Node node in dungeonMap) {
-            GameObject toGenerate;
-            if (node.RoomTags.HasFlag(RoomTag.IsSpawn))
-                toGenerate = prefabSpawn;
-            else if (node.IsBranch && !node.RoomTags.HasFlag(RoomTag.HasKey))
-                toGenerate = prefabBranch;
-            else if (node.RoomTags.HasFlag(RoomTag.HasKey))
-                toGenerate = prefabKey;
-            else if (node.RoomTags.HasFlag(RoomTag.IsExit))
-                toGenerate = prefabExit;
-            else
-                toGenerate = prefabRoom;
-
-            Vector3 position = new Vector3(
-                node.PosX * (tileLength + offsetBetweenSprite),
-                node.PosY * (tileLength + offsetBetweenSprite),
-                0);
-            
-            Instantiate(toGenerate, position, Quaternion.identity, transform);
-
-            if (!node.RoomTags.HasFlag(RoomTag.IsSpawn)) continue;
-
-            Transform cameraTransform = _mainCamera.transform;
-            
-            position.z = cameraTransform.position.z;
-            cameraTransform.position = position;
-        }
-        _isNewGeneration = false;
+        _displayRoom.Display();
     }
+    
+    // private void DisplayDungeon() {
+    //     textTries.text = $"Level : {LevelParameters.Instance.currentLevel}\n" +
+    //                      $"  Essaies : {_generationIteration}\n" +
+    //                      $"  Level Size : {LevelParameters.Instance.levelSize} => {Mathf.RoundToInt(LevelParameters.Instance.levelSize)}\n" +
+    //                      $"  Branches : {LevelParameters.Instance.levelBranches} => {Mathf.RoundToInt(LevelParameters.Instance.levelBranches)}\n" +
+    //                      $"  Branches Length : {LevelParameters.Instance.levelBranchLength} => {Mathf.RoundToInt(LevelParameters.Instance.levelBranchLength)}\n";
+    //
+    //     foreach (Node node in dungeonMap) {
+    //         GameObject toGenerate;
+    //         if (node.RoomTags.HasFlag(RoomTag.IsSpawn))
+    //             toGenerate = prefabSpawn;
+    //         else if (node.IsBranch && !node.RoomTags.HasFlag(RoomTag.HasKey))
+    //             toGenerate = prefabBranch;
+    //         else if (node.RoomTags.HasFlag(RoomTag.HasKey))
+    //             toGenerate = prefabKey;
+    //         else if (node.RoomTags.HasFlag(RoomTag.IsExit))
+    //             toGenerate = prefabExit;
+    //         else
+    //             toGenerate = prefabRoom;
+    //
+    //         Vector3 position = new Vector3(
+    //             node.PosX * (tileLength + offsetBetweenSprite),
+    //             node.PosY * (tileLength + offsetBetweenSprite),
+    //             0);
+    //         
+    //         Instantiate(toGenerate, position, Quaternion.identity, transform);
+    //
+    //         if (!node.RoomTags.HasFlag(RoomTag.IsSpawn)) continue;
+    //
+    //         Transform cameraTransform = _mainCamera.transform;
+    //         
+    //         position.z = cameraTransform.position.z;
+    //         cameraTransform.position = position;
+    //     }
+    //     _isNewGeneration = false;
+    // }
 
     private void NewSeed() {
         Random.InitState(DateTime.Now.Millisecond);

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class DisplayRoom : MonoBehaviour
-{
+public class DisplayRoom : MonoBehaviour {
     public int tailleX;
     public int tailleY;
     public int cell;
@@ -10,17 +9,17 @@ public class DisplayRoom : MonoBehaviour
     List<GameObject> allRoomInDungeons = new List<GameObject>();
     public List<RoomSettings> roomPrefabs = new List<RoomSettings>();
 
-    
-
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
+        if (Input.GetKeyDown(KeyCode.Z)) {
             Display(DungeonGenerator.Instance.dungeonMap, tailleX, tailleY);
- 
         }
     }
 
+    public void Display() {
+        Display(DungeonGenerator.Instance.dungeonMap, tailleX, tailleY);
+    }
+    
     private void Display(List<Node> room, float sizeRoomX, float sizeRoomY)
     {
         foreach (Node node in room)
@@ -35,18 +34,50 @@ public class DisplayRoom : MonoBehaviour
 
     private GameObject GetRoom(Node node)
     {
-        GameObject result;
+        List<GameObject> result = new List<GameObject>();
+        GameObject a;
         foreach (RoomSettings roomS in roomPrefabs)
         {
-            Debug.Log(node.RoomTags.HasFlag(roomS.RoomTags));
-            if (roomS.RoomTags.HasFlag(node.RoomTags))
+            a = null;
+            switch (roomS.RoomTags)
             {
-                result = roomS.Room;
-                return result;
+                case RoomType.RoomWithKey:
+                    a = CheckIsGoodRoom(node, roomS, RoomTag.HasKey);                    
+                    break;
+                case RoomType.RoomStart:
+                    a = CheckIsGoodRoom(node, roomS, RoomTag.IsSpawn);
+                    break;
+                case RoomType.RoomEnd:
+                    a = CheckIsGoodRoom(node, roomS, RoomTag.IsExit);
+                    break;
+                case RoomType.RoomClassic:
+                    bool b = node.RoomTags.HasFlag(RoomTag.IsSpawn);
+                    if(!node.RoomTags.HasFlag(RoomTag.IsSpawn) && !node.RoomTags.HasFlag(RoomTag.IsExit) && !node.RoomTags.HasFlag(RoomTag.HasKey))
+                        a = roomS.Room;
+                    break;
+                default:
+                    break;
             }
+
+            if (a != null)
+                result.Add(a);
         }
-        return null;
+        if(result.Count > 0)
+        {
+            return result[UnityEngine.Random.Range(0, result.Count - 1 )];
+        }
+        else
+        return result[0];
     }
+
+    private GameObject CheckIsGoodRoom(Node node, RoomSettings roomS, RoomTag tag)
+    {
+        if (node.RoomTags.HasFlag(tag))
+            return roomS.Room;
+        else
+            return null;
+    }
+
 
     private void SetDoor(Node node, Door door, RoomTag tagSelect, Door.STATE etatDoor)
     {
