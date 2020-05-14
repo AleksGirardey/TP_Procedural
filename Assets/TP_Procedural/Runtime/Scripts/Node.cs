@@ -1,11 +1,5 @@
 ﻿using System;
 
-public enum NodeDifficulty {
-    Easy,
-    Medium,
-    Hard
-}
-
 [Flags] public enum RoomTag {
     HasTopDoor = 0,
     HasRightDoor = 1,
@@ -24,11 +18,10 @@ public class Node
 {
     public RoomTag RoomTags;
 
-    public bool isBranch;
+    public bool IsBranch;
     
     public int PosX;
     public int PosY;
-    public NodeDifficulty    Difficulty = 0;
 
     public void AddFlag(RoomTag tag) {
         RoomTags |= tag;
@@ -40,6 +33,13 @@ public class Node
 
     public void SetFlag(RoomTag tag) {
         RoomTags = tag;
+    }
+
+    public void SetLocked(Node node) {
+        if (node.RoomTags.HasFlag(RoomTag.TopDoorLocked)) AddFlag(RoomTag.BottomDoorLocked);
+        if (node.RoomTags.HasFlag(RoomTag.RightDoorLocked)) AddFlag(RoomTag.LeftDoorLocked);
+        if (node.RoomTags.HasFlag(RoomTag.BottomDoorLocked)) AddFlag(RoomTag.TopDoorLocked);
+        if (node.RoomTags.HasFlag(RoomTag.LeftDoorLocked)) AddFlag(RoomTag.RightDoorLocked);
     }
 
     public void SetLocked() {

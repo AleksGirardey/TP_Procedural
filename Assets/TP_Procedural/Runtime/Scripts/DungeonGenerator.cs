@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,9 +12,6 @@ public class DungeonGenerator : MonoBehaviour {
     public bool applicationQuit;
     
     [Header("-- Generation Parameters --")]
-    
-    [Range(1, 10)] public int lockedDoors;
-    public int distanceMinBetweenStartAndEnd = 5;
     public int maxIteration = 4;
 
     public GameObject prefabSpawn;
@@ -28,17 +25,20 @@ public class DungeonGenerator : MonoBehaviour {
     public Text textTries;
     public List<Node> dungeonMap;
 
-    private readonly List<Node> waitingRoom = new List<Node>();
-
-    private Node _spawnNode;
+    private readonly List<Node> _waitingRoom = new List<Node>();
+    
     private bool _isNewGeneration;
-    private int generationIteration;
+    private int _generationIteration;
+    private Coroutine _generationCoroutine;
+
+    private Camera _mainCamera;
 
     private void Awake() {
         if (Instance == null) Instance = this;
         if (Instance != this) Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);
+        _mainCamera = Camera.main;
     }
 
     private void Start() {
@@ -51,7 +51,7 @@ public class DungeonGenerator : MonoBehaviour {
 
         while (!GenerateDungeon()) {
             ClearDungeon();
-            Debug.LogError("Cannot generate a good dungeon layout !");
+            Debug.LogWarning("Cannot generate a good dungeon layout !");
             if (applicationQuit)
                 Application.Quit(-1);
         }
@@ -60,33 +60,50 @@ public class DungeonGenerator : MonoBehaviour {
     private void Update() {
         if (_isNewGeneration)
             DisplayDungeon();
+        if (applicationQuit) StopCoroutine(_generationCoroutine);
     }
 
     public void ResetDungeon() {
         ClearDungeon();
-        GenerateDungeon();
+
+        _generationCoroutine = StartCoroutine(NewDungeonCoroutine());
     }
 
+    private IEnumerator NewDungeonCoroutine() {
+        while (!GenerateDungeon()) {
+            ClearDungeon();
+            Debug.LogWarning("Cannot generate a good dungeon layout !");
+        }
+
+        yield return null;
+    }
+
+    public void NextLevel() {
+        LevelParameters.Instance.NextLevel();
+        ResetDungeon();
+    }
+    
     private void ClearDungeon() {
         NewSeed();
-        generationIteration = 0;
+        _generationIteration = 0;
         dungeonMap.Clear();
-        waitingRoom.Clear();
+        _waitingRoom.Clear();
         while (transform.childCount != 0)
             DestroyImmediate(transform.GetChild(0).gameObject);
     }
     
     private void DisplayDungeon() {
-        textTries.text = $"Essaies : {generationIteration}\n" +
-                         $"Level Size : {LevelParameters.Instance.levelSize}\n" +
-                         $"Branches : {LevelParameters.Instance.levelBranches}\n" +
-                         $"Branches Length : {LevelParameters.Instance.levelBranchLength}\n";
+        textTries.text = $"Level : {LevelParameters.Instance.currentLevel}\n" +
+                         $"  Essaies : {_generationIteration}\n" +
+                         $"  Level Size : {LevelParameters.Instance.levelSize} => {Mathf.RoundToInt(LevelParameters.Instance.levelSize)}\n" +
+                         $"  Branches : {LevelParameters.Instance.levelBranches} => {Mathf.RoundToInt(LevelParameters.Instance.levelBranches)}\n" +
+                         $"  Branches Length : {LevelParameters.Instance.levelBranchLength} => {Mathf.RoundToInt(LevelParameters.Instance.levelBranchLength)}\n";
 
         foreach (Node node in dungeonMap) {
             GameObject toGenerate;
             if (node.RoomTags.HasFlag(RoomTag.IsSpawn))
                 toGenerate = prefabSpawn;
-            else if (node.isBranch && !node.RoomTags.HasFlag(RoomTag.HasKey))
+            else if (node.IsBranch && !node.RoomTags.HasFlag(RoomTag.HasKey))
                 toGenerate = prefabBranch;
             else if (node.RoomTags.HasFlag(RoomTag.HasKey))
                 toGenerate = prefabKey;
@@ -103,9 +120,11 @@ public class DungeonGenerator : MonoBehaviour {
             Instantiate(toGenerate, position, Quaternion.identity, transform);
 
             if (!node.RoomTags.HasFlag(RoomTag.IsSpawn)) continue;
+
+            Transform cameraTransform = _mainCamera.transform;
             
-            position.z = Camera.main.transform.position.z;
-            Camera.main.transform.position = position;
+            position.z = cameraTransform.position.z;
+            cameraTransform.position = position;
         }
         _isNewGeneration = false;
     }
@@ -123,7 +142,10 @@ public class DungeonGenerator : MonoBehaviour {
         bool isDefined = true;
         Node lastNode = GenerateSpawn();
         
-        lastNode = GeneratePath(ref lastNode, LevelParameters.Instance.levelSize, LevelParameters.Instance.levelBranches);
+        lastNode = GeneratePath(
+            ref lastNode, 
+            Mathf.RoundToInt(LevelParameters.Instance.levelSize),
+            Mathf.RoundToInt(LevelParameters.Instance.levelBranches));
 
         if (lastNode == null)
             isDefined = false;
@@ -132,28 +154,31 @@ public class DungeonGenerator : MonoBehaviour {
     }
 
     private Node GeneratePath(ref Node startNode, int length, int branches) {
+        Node lastLastNode = null;
         Node lastNode = startNode;
         List<Node> pathNode = new List<Node>();
 
         for (int i = 0; i < length; i++) {
+            lastLastNode = lastNode;
             lastNode = DrawNode(lastNode, 0);
 
             if (lastNode == null) return null;
-
+            
             pathNode.Add(lastNode);
-            if (!waitingRoom.Contains(lastNode))
-                waitingRoom.Add(lastNode);
+            if (!_waitingRoom.Contains(lastNode))
+                _waitingRoom.Add(lastNode);
         }
         
         lastNode.SetLocked();
+        lastLastNode?.SetLocked(lastNode);
         lastNode.AddFlag(RoomTag.IsExit);
 
-        Debug.Log($"Waiting room {waitingRoom.Count}");
+        Debug.Log($"Waiting room {_waitingRoom.Count}");
         
         if (!GenerateBranches(pathNode, branches)) return null;
         
-        dungeonMap = dungeonMap.Union(waitingRoom).ToList();
-        waitingRoom.Clear();
+        dungeonMap = dungeonMap.Union(_waitingRoom).ToList();
+        _waitingRoom.Clear();
 
         return lastNode;
     }
@@ -164,7 +189,7 @@ public class DungeonGenerator : MonoBehaviour {
 
         drawPool = drawPool.Where(node => !node.RoomTags.HasFlag(RoomTag.IsExit)).ToList();
         int count = Mathf.Min(branches, drawPool.Count);
-        for (int i = 0; i <= count; i++) {
+        for (int i = 0; i < count; i++) {
             int index = Random.Range(0, drawPool.Count);
             bool hasKey = !keySet && (i > count / 2 || Random.Range(0, 11) > 5);
 
@@ -180,20 +205,28 @@ public class DungeonGenerator : MonoBehaviour {
     }
     
     private bool GenerateBranch(Node startNode, bool hasKey, int iteration) {
-        int length = LevelParameters.Instance.levelBranchLength;
+        int length = Mathf.RoundToInt(LevelParameters.Instance.levelBranchLength);
         Node lastNode = startNode;
+        bool doesBreak = false;
         
         if (iteration > maxIteration) return false;
         
         for (int i = 0; i < length; i++) {
+            Node lastLastNode = lastNode;
             lastNode = DrawNode(lastNode, 0);
 
-            if (lastNode == null)
-                return GenerateBranch(startNode, hasKey, iteration + 1);
+            if (lastNode == null) {
+                if (!GenerateBranch(startNode, hasKey, iteration + 1) && i < length / 2)
+                    return false;
+                doesBreak = true;
+                lastNode = lastLastNode;
+            }
 
-            lastNode.isBranch = true;
-            if (!waitingRoom.Contains(lastNode))
-                waitingRoom.Add(lastNode);
+            lastNode.IsBranch = true;
+            if (!_waitingRoom.Contains(lastNode))
+                _waitingRoom.Add(lastNode);
+
+            if (doesBreak) break;
         }
         
         if (hasKey) lastNode.AddFlag(RoomTag.HasKey);
@@ -217,7 +250,7 @@ public class DungeonGenerator : MonoBehaviour {
     private Node GetNode(int x, int y) {
         IEnumerable<Node> select = dungeonMap
             .Where(node => node.PosX == x && node.PosY == y);
-        IEnumerable<Node> selectWaiting = waitingRoom
+        IEnumerable<Node> selectWaiting = _waitingRoom
             .Where(node => node.PosX == x && node.PosY == y);
 
         select = select.Concat(selectWaiting);
@@ -254,7 +287,6 @@ public class DungeonGenerator : MonoBehaviour {
             PosY = Random.Range(-10, 10)
         };
         spawn.AddFlag(RoomTag.IsSpawn);
-        _spawnNode = spawn;
         dungeonMap.Add(spawn);
 
         return spawn;
