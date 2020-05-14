@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b32d73389dfe49447aca6361ed0ee78e, type: 3}
-  m_Name: RoomSettings
+  m_Name: RoomSettings2
   m_EditorClassIdentifier: 
-  Room: {fileID: 5794089743637362914, guid: eaeebe882ebb20444801ffbf442bb729, type: 3}
+  Room: {fileID: 1337546377040511584, guid: bf04614c49db5e84795c3a3e03f4d8c1, type: 3}
   RoomTags: 495
