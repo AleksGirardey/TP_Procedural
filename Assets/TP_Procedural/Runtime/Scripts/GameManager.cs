@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour {
     public GameObject playerPrefab;
 
     private GameObject _playerInstance;
+    
+    public bool isPlayerDead;
 
     [HideInInspector] public GameObject spawnRoom;
     
@@ -19,6 +21,10 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Update() {
+        if (isPlayerDead) {
+            isPlayerDead = false;
+            Reload();
+        }
         if (!hasReachedEnd) return;
         
         hasReachedEnd = false;
@@ -27,6 +33,11 @@ public class GameManager : MonoBehaviour {
 
     public void Play() {
         SceneManager.LoadScene("NoEndScene");
+    }
+
+    public void Reload()
+    {
+        DungeonGenerator.Instance.ResetDungeon();
     }
 
     public void Quit() {

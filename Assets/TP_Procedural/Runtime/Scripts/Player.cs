@@ -179,7 +179,10 @@ public class Player : MonoBehaviour {
         switch (_state)
         {
             case STATE.STUNNED: _currentMovement = stunnedMovement; break;
-            case STATE.DEAD: EndBlink(); break;
+            case STATE.DEAD: 
+                EndBlink();
+                GameManager.Instance.isPlayerDead = true;
+                break;
             default: _currentMovement = defaultMovement; break;
         }
 

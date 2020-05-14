@@ -31,7 +31,7 @@ public class DungeonGenerator : MonoBehaviour {
     private readonly List<Node> _waitingRoom = new List<Node>();
     
     private bool _isNewGeneration;
-    private int _generationIteration;
+    //private int _generationIteration;
     private Coroutine _generationCoroutine;
 
     private CameraFollow _mainCameraFollow;
@@ -96,11 +96,11 @@ public class DungeonGenerator : MonoBehaviour {
     
     private void ClearDungeon() {
         NewSeed();
-        _generationIteration = 0;
+        //_generationIteration = 0;
         dungeonMap.Clear();
         _waitingRoom.Clear();
         _displayRoom.DeleteDisplay();
-        if (_playerInstance) DestroyImmediate(_playerInstance);
+        if (_playerInstance) Destroy(_playerInstance);
         while (transform.childCount != 0)
             DestroyImmediate(transform.GetChild(0).gameObject);
     }
