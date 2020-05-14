@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
     public static GameManager Instance;
@@ -27,5 +28,13 @@ public class GameManager : MonoBehaviour {
 
     private void SetPlayerPosition() {
         // Recuperer le point de spawn sur la map généré
+    }
+
+    public void Play() {
+        SceneManager.LoadScene("NoEndScene");
+    }
+
+    public void Quit() {
+        Application.Quit(-1);
     }
 }

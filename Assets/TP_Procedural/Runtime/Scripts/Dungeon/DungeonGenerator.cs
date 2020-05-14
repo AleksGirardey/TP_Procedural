@@ -10,7 +10,7 @@ public class DungeonGenerator : MonoBehaviour {
     public static DungeonGenerator Instance;
 
     public bool applicationQuit;
-    
+    public bool debug;
     [Header("-- Generation Parameters --")]
     public int maxIteration = 4;
 
@@ -60,7 +60,7 @@ public class DungeonGenerator : MonoBehaviour {
     }
 
     private void Update() {
-        if (_isNewGeneration)
+        if (_isNewGeneration && debug)
             DisplayDungeon();
         if (applicationQuit) StopCoroutine(_generationCoroutine);
     }
@@ -155,8 +155,6 @@ public class DungeonGenerator : MonoBehaviour {
         if (lastNode == null)
             isDefined = false;
 
-        Debug.Log($"Spawn : {_spawnNode.RoomTags}");
-        
         return isDefined;
     }
 
