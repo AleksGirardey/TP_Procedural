@@ -1,17 +1,17 @@
 ﻿using System;
 
 [Flags] public enum RoomTag {
-    HasTopDoor = 0,
-    HasRightDoor = 1,
-    HasBottomDoor = 2,
-    HasLeftDoor = 4,
-    HasKey = 8,
-    TopDoorLocked = 16,
-    RightDoorLocked = 32,
-    BottomDoorLocked = 64,
-    LeftDoorLocked = 128,
-    IsSpawn = 256,
-    IsExit = 512
+    HasTopDoor = 1,
+    HasRightDoor = 2,
+    HasBottomDoor = 4,
+    HasLeftDoor = 8,
+    HasKey = 16,
+    TopDoorLocked = 32,
+    RightDoorLocked = 64,
+    BottomDoorLocked = 128,
+    LeftDoorLocked = 256,
+    IsSpawn = 512,
+    IsExit = 1024
 }
 
 public class Node 
