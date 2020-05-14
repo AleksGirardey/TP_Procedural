@@ -12,24 +12,36 @@ public class DisplayRoom : MonoBehaviour
     List<GameObject> allRoomInDungeons = new List<GameObject>();
     public List<RoomSettings> roomPrefabs = new List<RoomSettings>();
 
+    
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            Display(DungeonGenerator.Instance.dungeonMap, tailleX, tailleY);
+ 
+        }
+    }
 
     private void Display(List<Node> room, float sizeRoomX, float sizeRoomY)
     {
         foreach (Node node in room)
         {
             Vector2 positionRoom = new Vector2(node.PosX * sizeRoomX, node.PosY * sizeRoomY);
-            //allRoomInDungeons.Add(Instantiate())
-            Gizmos.DrawCube((Vector3)positionRoom, new Vector3(cell,cell,0));
+            GameObject a = Instantiate(GetRoom(node), positionRoom, Quaternion.identity);
+            allRoomInDungeons.Add(a);
+            SetDoor(node, a);
         }
     }
 
 
-    public GameObject GetRoom(Node node)
+    private GameObject GetRoom(Node node)
     {
         GameObject result;
         foreach (RoomSettings roomS in roomPrefabs)
         {
-            if (node.RoomTags == roomS.RoomTags)
+            Debug.Log(node.RoomTags.HasFlag(roomS.RoomTags));
+            if (roomS.RoomTags.HasFlag(node.RoomTags))
             {
                 result = roomS.Room;
                 return result;
@@ -38,6 +50,48 @@ public class DisplayRoom : MonoBehaviour
         return null;
     }
 
+    private void SetDoor(Node node, Door door, RoomTag tagSelect, Door.STATE etatDoor)
+    {
+        if(node.RoomTags.HasFlag(tagSelect))            
+            {
+                door.SetState(etatDoor);
+            }
+    }
+
+    private void SetDoor(Node node, GameObject room)
+    {
+        Door[] doorArray = room.GetComponentsInChildren<Door>();
+        for (int i = 0; i < doorArray.Length; i++)
+        {
+            doorArray[i].SetState(Door.STATE.WALL);
+
+            switch (doorArray[i].Orientation)
+            {
+                case Utils.ORIENTATION.NONE:
+                    break;
+                case Utils.ORIENTATION.NORTH:
+                    SetDoor(node, doorArray[i], RoomTag.HasTopDoor, Door.STATE.OPEN);
+                    SetDoor(node, doorArray[i], RoomTag.TopDoorLocked, Door.STATE.CLOSED);
+                    break;
+                case Utils.ORIENTATION.EAST:
+                    SetDoor(node, doorArray[i], RoomTag.HasRightDoor, Door.STATE.OPEN);
+                    SetDoor(node, doorArray[i], RoomTag.RightDoorLocked, Door.STATE.CLOSED);
+                    break;
+                case Utils.ORIENTATION.SOUTH:
+                    SetDoor(node, doorArray[i], RoomTag.HasBottomDoor, Door.STATE.OPEN);
+                    SetDoor(node, doorArray[i], RoomTag.BottomDoorLocked, Door.STATE.CLOSED);
+                    break;
+                case Utils.ORIENTATION.WEST:
+                    SetDoor(node, doorArray[i], RoomTag.HasLeftDoor, Door.STATE.OPEN);
+                    SetDoor(node, doorArray[i], RoomTag.LeftDoorLocked, Door.STATE.CLOSED);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+    }
 
     private void OnDrawGizmos()
     {

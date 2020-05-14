@@ -29,11 +29,12 @@ public class Door : MonoBehaviour {
 	public void Awake()
 	{
 		_room = GetComponentInParent<Room>();
-	}
+        _orientation = Utils.AngleToOrientation(-transform.eulerAngles.z);
+    }
 
 	public void Start()
     {
-        _orientation = Utils.AngleToOrientation(-transform.eulerAngles.z);
+        
 		if(closedGo.gameObject.activeSelf)
 		{
 			SetState(STATE.CLOSED);
