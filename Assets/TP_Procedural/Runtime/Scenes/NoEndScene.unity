@@ -138,7 +138,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!81 &354634910
 AudioListener:
   m_ObjectHideFlags: 0
@@ -534,8 +534,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   applicationQuit: 0
-  lockedDoors: 1
-  distanceMinBetweenStartAndEnd: 5
   maxIteration: 4
   prefabSpawn: {fileID: 9015248085823873627, guid: b54f7bfdd3b17bd4aad027bf6b8b7039,
     type: 3}
@@ -567,7 +565,18 @@ MonoBehaviour:
   cell: 10
   debug: 0
   roomPrefabs:
-  - {fileID: 11400000, guid: ddf8af06bd787e3439874987b7288ba4, type: 2}
+  - {fileID: 11400000, guid: 311828b69c26e7246b18de54049e8695, type: 2}
+  - {fileID: 11400000, guid: f45892c54a140434cbeb160685829fea, type: 2}
+  - {fileID: 11400000, guid: c90f3e9afa826c64984d07716dbf83e3, type: 2}
+  - {fileID: 11400000, guid: b22aa1ccdc35be544904765d58c4bceb, type: 2}
+  - {fileID: 11400000, guid: 01557ecb2a5a836468bb02d7615e7d0f, type: 2}
+  - {fileID: 11400000, guid: 714cedd4ebb58034e9ef9d15bd4fa4e3, type: 2}
+  - {fileID: 11400000, guid: e90b9a4cfe07a0f468dc762d5cef1146, type: 2}
+  - {fileID: 11400000, guid: fe5192d8fc1e38f468081fc8e9c8f514, type: 2}
+  - {fileID: 11400000, guid: 306953a267673ea4baf96f379f3cff1b, type: 2}
+  - {fileID: 11400000, guid: b671e269072cf8c4385eb6b9dc4bb025, type: 2}
+  - {fileID: 11400000, guid: 31d68771920a8824bb9c5568ae1442cb, type: 2}
+  - {fileID: 11400000, guid: 2b702e98064b03b40866c08cbff5767e, type: 2}
 --- !u!1 &1433897128
 GameObject:
   m_ObjectHideFlags: 0

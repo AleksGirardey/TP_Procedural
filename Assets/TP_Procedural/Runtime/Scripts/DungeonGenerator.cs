@@ -33,6 +33,8 @@ public class DungeonGenerator : MonoBehaviour {
 
     private Camera _mainCamera;
 
+    private Node _spawnNode;
+
     private void Awake() {
         if (Instance == null) Instance = this;
         if (Instance != this) Destroy(gameObject);
@@ -70,10 +72,13 @@ public class DungeonGenerator : MonoBehaviour {
     }
 
     private IEnumerator NewDungeonCoroutine() {
+        int iteration = 0;
         while (!GenerateDungeon()) {
             ClearDungeon();
-            Debug.LogWarning("Cannot generate a good dungeon layout !");
+            iteration++;
         }
+        
+        Debug.LogWarning($"Iteration before generating a dungeon : {iteration}");
 
         yield return null;
     }
@@ -150,6 +155,8 @@ public class DungeonGenerator : MonoBehaviour {
         if (lastNode == null)
             isDefined = false;
 
+        Debug.Log($"Spawn : {_spawnNode.RoomTags}");
+        
         return isDefined;
     }
 
@@ -221,7 +228,7 @@ public class DungeonGenerator : MonoBehaviour {
                 doesBreak = true;
                 lastNode = lastLastNode;
             }
-
+            
             lastNode.IsBranch = true;
             if (!_waitingRoom.Contains(lastNode))
                 _waitingRoom.Add(lastNode);
@@ -243,7 +250,7 @@ public class DungeonGenerator : MonoBehaviour {
         if (neighbors.Count == 0) return DrawNode(lastNode, iteration + 1);
             
         Vector2 selectedNeighbor = neighbors[Random.Range(0, neighbors.Count)];
-
+        
         return CreateNode(selectedNeighbor, ref lastNode);
     }
 
@@ -286,6 +293,8 @@ public class DungeonGenerator : MonoBehaviour {
             PosX = Random.Range(-10, 10),
             PosY = Random.Range(-10, 10)
         };
+
+        _spawnNode = spawn;
         spawn.AddFlag(RoomTag.IsSpawn);
         dungeonMap.Add(spawn);
 
@@ -307,11 +316,11 @@ public class DungeonGenerator : MonoBehaviour {
         } else if (room.PosX + 1 == lastNode.PosX && room.PosY == lastNode.PosY) {
             room.AddFlag(RoomTag.HasRightDoor);
             lastNode.AddFlag(RoomTag.HasLeftDoor);
-        } else if (room.PosX + 1 == lastNode.PosX && room.PosY == lastNode.PosY) {
+        } else if (room.PosX - 1 == lastNode.PosX && room.PosY == lastNode.PosY) {
             room.AddFlag(RoomTag.HasLeftDoor);
             lastNode.AddFlag(RoomTag.HasRightDoor);
         }
-        
+
         return room;
     }
 }

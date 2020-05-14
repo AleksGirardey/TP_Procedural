@@ -164,6 +164,7 @@
               </e>
               <e p="DungeonGenerator.cs" t="Include" />
               <e p="Enemy.cs" t="Include" />
+              <e p="GameManager.cs" t="Include" />
               <e p="Node.cs" t="Include" />
               <e p="Player.cs" t="Include" />
               <e p="Room.cs" t="Include" />
