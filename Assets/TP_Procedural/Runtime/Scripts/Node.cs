@@ -14,13 +14,13 @@
     IsExit = 1024
 }
 
-[Flags]
+
 public enum RoomType
 {
-    RoomWithKey = 1,
-    RoomStart = 2,
-    RoomEnd = 4,
-    RoomClassic = 8,
+    RoomWithKey,
+    RoomStart,
+    RoomEnd,
+    RoomClassic
 }
 
 public class Node 

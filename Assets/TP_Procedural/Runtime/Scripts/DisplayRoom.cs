@@ -54,7 +54,9 @@ public class DisplayRoom : MonoBehaviour
                     a = CheckIsGoodRoom(node, roomS, RoomTag.IsExit);
                     break;
                 case RoomType.RoomClassic:
-                    a = roomS.Room;
+                    bool b = node.RoomTags.HasFlag(RoomTag.IsSpawn);
+                    if(!node.RoomTags.HasFlag(RoomTag.IsSpawn) && !node.RoomTags.HasFlag(RoomTag.IsExit) && !node.RoomTags.HasFlag(RoomTag.HasKey))
+                        a = roomS.Room;
                     break;
                 default:
                     break;
@@ -65,7 +67,7 @@ public class DisplayRoom : MonoBehaviour
         }
         if(result.Count > 0)
         {
-            return result[UnityEngine.Random.Range(0, result.Count + 1)];
+            return result[UnityEngine.Random.Range(0, result.Count - 1 )];
         }
         else
         return result[0];

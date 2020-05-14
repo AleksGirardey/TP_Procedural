@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: RoomSettings5
   m_EditorClassIdentifier: 
   Room: {fileID: 8305364400916014294, guid: 3a323393dfbae6a419f68acea8149cb0, type: 3}
-  RoomTags: 495
+  RoomTags: 3
