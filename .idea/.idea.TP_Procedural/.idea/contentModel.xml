@@ -156,8 +156,8 @@
                 <e p="ACollectible.cs" t="Include" />
                 <e p="KeyCollectible.cs" t="Include" />
               </e>
-              <e p="Connection.cs" t="Include" />
               <e p="Const.cs" t="Include" />
+              <e p="DisplayRoom.cs" t="Include" />
               <e p="Door.cs" t="Include" />
               <e p="Dungeon" t="Include">
                 <e p="LevelParameters.cs" t="Include" />
@@ -167,6 +167,7 @@
               <e p="Node.cs" t="Include" />
               <e p="Player.cs" t="Include" />
               <e p="Room.cs" t="Include" />
+              <e p="RoomSettings.cs" t="Include" />
               <e p="Spike.cs" t="Include" />
             </e>
           </e>

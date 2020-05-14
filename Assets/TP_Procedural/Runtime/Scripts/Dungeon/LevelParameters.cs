@@ -11,9 +11,9 @@ public class LevelParameters : MonoBehaviour {
     [Range(0, 1)] public float branchLengthRatio = 0.2f;
     
     [ReadOnly(true)] public int seed;
-    public int levelSize = 5;
-    public int levelBranches = 2;
-    public int levelBranchLength = 3;
+    public float levelSize = 5;
+    public float levelBranches = 2;
+    public float levelBranchLength = 3;
     
     private void Awake() {
         if (Instance == null) Instance = this;
@@ -25,8 +25,10 @@ public class LevelParameters : MonoBehaviour {
     public void NextLevel() {
         currentLevel++;
 
-        levelSize += Mathf.RoundToInt(levelSize * sizeRatio);
-        levelBranches += Mathf.RoundToInt(levelBranches * branchesRatio);
-        levelBranchLength += Mathf.RoundToInt(levelBranchLength * branchLengthRatio);
+        if (currentLevel > 4) return;
+        
+        levelSize += levelSize * sizeRatio;
+        levelBranches += levelBranches * branchesRatio;
+        levelBranchLength += levelBranchLength * branchLengthRatio;
     }
 }
