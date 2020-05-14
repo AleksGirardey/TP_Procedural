@@ -534,8 +534,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   applicationQuit: 0
-  lockedDoors: 1
-  distanceMinBetweenStartAndEnd: 5
   maxIteration: 4
   prefabSpawn: {fileID: 9015248085823873627, guid: b54f7bfdd3b17bd4aad027bf6b8b7039,
     type: 3}
@@ -567,7 +565,7 @@ MonoBehaviour:
   cell: 10
   debug: 0
   roomPrefabs:
-  - {fileID: 11400000, guid: ddf8af06bd787e3439874987b7288ba4, type: 2}
+  - {fileID: 11400000, guid: 7eb03afad96c03440a78e7182bfeafd6, type: 2}
 --- !u!1 &1433897128
 GameObject:
   m_ObjectHideFlags: 0

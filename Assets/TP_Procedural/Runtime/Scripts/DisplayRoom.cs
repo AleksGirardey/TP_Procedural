@@ -1,6 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System;
 using UnityEngine;
 
 public class DisplayRoom : MonoBehaviour
@@ -37,18 +37,48 @@ public class DisplayRoom : MonoBehaviour
 
     private GameObject GetRoom(Node node)
     {
-        GameObject result;
+        List<GameObject> result = new List<GameObject>();
+        GameObject a = null;
         foreach (RoomSettings roomS in roomPrefabs)
         {
-            Debug.Log(node.RoomTags.HasFlag(roomS.RoomTags));
-            if (roomS.RoomTags.HasFlag(node.RoomTags))
+            a = null;
+            switch (roomS.RoomTags)
             {
-                result = roomS.Room;
-                return result;
+                case RoomType.RoomWithKey:
+                    a = CheckIsGoodRoom(node, roomS, RoomTag.HasKey);                    
+                    break;
+                case RoomType.RoomStart:
+                    a = CheckIsGoodRoom(node, roomS, RoomTag.IsSpawn);
+                    break;
+                case RoomType.RoomEnd:
+                    a = CheckIsGoodRoom(node, roomS, RoomTag.IsExit);
+                    break;
+                case RoomType.RoomClassic:
+                    a = roomS.Room;
+                    break;
+                default:
+                    break;
             }
+
+            if (a != null)
+                result.Add(a);
         }
-        return null;
+        if(result.Count > 0)
+        {
+            return result[UnityEngine.Random.Range(0, result.Count + 1)];
+        }
+        else
+        return result[0];
     }
+
+    private GameObject CheckIsGoodRoom(Node node, RoomSettings roomS, RoomTag tag)
+    {
+        if (node.RoomTags.HasFlag(tag))
+            return roomS.Room;
+        else
+            return null;
+    }
+
 
     private void SetDoor(Node node, Door door, RoomTag tagSelect, Door.STATE etatDoor)
     {

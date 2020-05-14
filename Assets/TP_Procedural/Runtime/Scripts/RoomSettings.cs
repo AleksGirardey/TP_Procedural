@@ -6,6 +6,6 @@ using UnityEngine;
 public class RoomSettings : ScriptableObject
 {
     public GameObject Room;
-    public RoomTag RoomTags;
+    public RoomType RoomTags;
 }
 
