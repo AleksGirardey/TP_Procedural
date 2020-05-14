@@ -272,6 +272,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -328,6 +329,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hasReachedEnd: 0
   playerPrefab: {fileID: 0}
+  isPlayerDead: 0
   spawnRoom: {fileID: 0}
 --- !u!4 &585984108
 Transform:
@@ -451,6 +453,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -580,6 +583,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -653,6 +657,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -760,6 +765,44 @@ MonoBehaviour:
   cell: 10
   debug: 0
   roomPrefabs:
+  - {fileID: 11400000, guid: d651d2077af3f0d46918ff0d3c4e836b, type: 2}
+  - {fileID: 11400000, guid: b66bc6666aa40e0479e3034fac37d857, type: 2}
+  - {fileID: 11400000, guid: 7968b28c6fab0ad4ab142d2eff10156e, type: 2}
+  - {fileID: 11400000, guid: 3a50d5cd73edae6479ac90f57331e22d, type: 2}
+  - {fileID: 11400000, guid: 2daee30ef34201942a734aea7414dae2, type: 2}
+  - {fileID: 11400000, guid: 9ace5c87b30d7944791788094bc6ffdf, type: 2}
+  - {fileID: 11400000, guid: 315582e22952f164496868897a131cec, type: 2}
+  - {fileID: 11400000, guid: f637df6aa4c0b0d42b248e5a48d8716b, type: 2}
+  - {fileID: 11400000, guid: 8aba36971f2715041a90651b4f4f4f5d, type: 2}
+  - {fileID: 11400000, guid: 8eda622b1b3b2844895f298caa82f180, type: 2}
+  - {fileID: 11400000, guid: d44124fcebad770438a2260e8ec7ee85, type: 2}
+  - {fileID: 11400000, guid: ceac1f98a8556f74983bc87103e65002, type: 2}
+  - {fileID: 11400000, guid: 9f32216baf1f0614b829397115f50af0, type: 2}
+  - {fileID: 11400000, guid: 25da27a4df59e5645ad63d3f73950956, type: 2}
+  - {fileID: 11400000, guid: 714c63cca3e566a40a804de409220228, type: 2}
+  - {fileID: 11400000, guid: a688589c30ae8fb47bc02d34cbf6a8b6, type: 2}
+  - {fileID: 11400000, guid: cbc3588b53f396d46bc10534e3da2837, type: 2}
+  - {fileID: 11400000, guid: 71339fb0efc699e4a98803e6c36b3ac8, type: 2}
+  - {fileID: 11400000, guid: 1203ee8d9cc793745a04ba9ad6b080ba, type: 2}
+  - {fileID: 11400000, guid: d7c7cd139c3ec314e9cb46e65adcfb75, type: 2}
+  - {fileID: 11400000, guid: 9f1292d820c5abe4ab1c6fce9a70ca08, type: 2}
+  - {fileID: 11400000, guid: 42bc8005f70dc5d42b0d3238f8835def, type: 2}
+  - {fileID: 11400000, guid: 4f5ba5f061d31fa459d6bf0fe9a85989, type: 2}
+  - {fileID: 11400000, guid: b2f21ff44e650e04da9f35e4caa5522b, type: 2}
+  - {fileID: 11400000, guid: b715e96b9caa50c4087b258fabb2a056, type: 2}
+  - {fileID: 11400000, guid: ec0585d6f264d604d819c679fc09ee2c, type: 2}
+  - {fileID: 11400000, guid: 2ffdb8e7cbd4f294cb82bb853b5567e4, type: 2}
+  - {fileID: 11400000, guid: 5dda8f8f813e5ad4f98042be63475052, type: 2}
+  - {fileID: 11400000, guid: 19d96963ee7a3624b99c2f405f99aad7, type: 2}
+  - {fileID: 11400000, guid: f35c9c3b508400c47b41664c2aaae39f, type: 2}
+  - {fileID: 11400000, guid: 2f9a13dd17d6d7b4ba279f414fa41665, type: 2}
+  - {fileID: 11400000, guid: c50e0dbc90ede40498bba9a1736487f6, type: 2}
+  - {fileID: 11400000, guid: 508d93ae3b5462341a4ec25d1e9044b3, type: 2}
+  - {fileID: 11400000, guid: 5397060c7cb93734b9098e1e769e6d5b, type: 2}
+  - {fileID: 11400000, guid: fb1de36f49ca81e4f9fff3c71d219699, type: 2}
+  - {fileID: 11400000, guid: 6280db99ab903014190f7c34b29c5fb0, type: 2}
+  - {fileID: 11400000, guid: 09cb48f5084be2549bf865cb6d654b9a, type: 2}
+  - {fileID: 11400000, guid: 0f2063464f826234184f6e9bba635f19, type: 2}
   - {fileID: 11400000, guid: 311828b69c26e7246b18de54049e8695, type: 2}
   - {fileID: 11400000, guid: f45892c54a140434cbeb160685829fea, type: 2}
   - {fileID: 11400000, guid: c90f3e9afa826c64984d07716dbf83e3, type: 2}
@@ -772,8 +815,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b671e269072cf8c4385eb6b9dc4bb025, type: 2}
   - {fileID: 11400000, guid: 31d68771920a8824bb9c5568ae1442cb, type: 2}
   - {fileID: 11400000, guid: e59d83f3bfc457d47ab57b4e12018f2c, type: 2}
-  - {fileID: 11400000, guid: 9fb9842b0a6b8814db73cdc61ee88368, type: 2}
-  - {fileID: 11400000, guid: 3e209a4f1f78920459cddefef10981d0, type: 2}
   - {fileID: 11400000, guid: 2b702e98064b03b40866c08cbff5767e, type: 2}
   spawnPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1433897128
@@ -945,6 +986,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
