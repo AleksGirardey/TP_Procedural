@@ -14,6 +14,9 @@ public class DungeonGenerator : MonoBehaviour {
     [Header("-- Generation Parameters --")]
     public int maxIteration = 4;
 
+    private GameObject _playerInstance;
+    public GameObject prefabPlayer;
+    
     public GameObject prefabSpawn;
     public GameObject prefabBranch;
     public GameObject prefabKey;
@@ -31,9 +34,9 @@ public class DungeonGenerator : MonoBehaviour {
     private int _generationIteration;
     private Coroutine _generationCoroutine;
 
-    private Camera _mainCamera;
+    private CameraFollow _mainCameraFollow;
 
-    private Node _spawnNode;
+    [HideInInspector] public GameObject spawnRoom;
 
     private DisplayRoom _displayRoom;
 
@@ -42,7 +45,7 @@ public class DungeonGenerator : MonoBehaviour {
         if (Instance != this) Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);
-        _mainCamera = Camera.main;
+        _mainCameraFollow = Camera.main.GetComponent<CameraFollow>();
         _displayRoom = GetComponent<DisplayRoom>();
     }
 
@@ -96,12 +99,27 @@ public class DungeonGenerator : MonoBehaviour {
         _generationIteration = 0;
         dungeonMap.Clear();
         _waitingRoom.Clear();
+        _displayRoom.DeleteDisplay();
+        if (_playerInstance) DestroyImmediate(_playerInstance);
         while (transform.childCount != 0)
             DestroyImmediate(transform.GetChild(0).gameObject);
     }
 
+    private void SetPlayerPosition() {
+        if (_playerInstance) DestroyImmediate(_playerInstance);
+        _playerInstance = Instantiate(prefabPlayer);
+        _playerInstance.transform.position = 
+            new Vector3(
+                spawnRoom.transform.position.x + 0.5f + _displayRoom.tailleX / 2,
+                spawnRoom.transform.position.y + 0.5f + _displayRoom.tailleY / 2, 1);
+        _mainCameraFollow.target = _playerInstance;
+//        spawnRoom.GetComponent<Room>()?.OnEnterRoom();
+    }
+    
     private void DisplayDungeon() {
         _displayRoom.Display();
+        SetPlayerPosition();
+        _isNewGeneration = false;
     }
     
     // private void DisplayDungeon() {
@@ -298,8 +316,7 @@ public class DungeonGenerator : MonoBehaviour {
             PosX = Random.Range(-10, 10),
             PosY = Random.Range(-10, 10)
         };
-
-        _spawnNode = spawn;
+        
         spawn.AddFlag(RoomTag.IsSpawn);
         dungeonMap.Add(spawn);
 

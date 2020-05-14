@@ -676,7 +676,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasReachedEnd: 0
-  player: {fileID: 0}
+  playerPrefab: {fileID: 3061304262239656675, guid: 3e99f044c283cd440bd8fee09c5090db,
+    type: 3}
+  spawnRoom: {fileID: 0}
 --- !u!4 &1049825576
 Transform:
   m_ObjectHideFlags: 0

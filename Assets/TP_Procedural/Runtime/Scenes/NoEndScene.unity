@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 354634912}
   - component: {fileID: 354634911}
   - component: {fileID: 354634910}
+  - component: {fileID: 354634913}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -204,6 +205,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &354634913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 354634909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 993afbba53e10724abecc10a7445f6d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  lerpSpeed: 5
+  cameraSize: {x: 0, y: 0}
 --- !u!1 &355929803
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,6 +681,8 @@ MonoBehaviour:
   applicationQuit: 0
   debug: 0
   maxIteration: 4
+  prefabPlayer: {fileID: 3061304262239656675, guid: 3e99f044c283cd440bd8fee09c5090db,
+    type: 3}
   prefabSpawn: {fileID: 9015248085823873627, guid: b54f7bfdd3b17bd4aad027bf6b8b7039,
     type: 3}
   prefabBranch: {fileID: 9015248085823873627, guid: 183cf4cfc4e85844d88a6cb3798bd34e,
@@ -678,6 +696,7 @@ MonoBehaviour:
   tileLength: 1
   offsetBetweenSprite: 0.5
   textTries: {fileID: 355929805}
+  spawnRoom: {fileID: 0}
 --- !u!114 &1339407412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -710,6 +729,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9fb9842b0a6b8814db73cdc61ee88368, type: 2}
   - {fileID: 11400000, guid: 3e209a4f1f78920459cddefef10981d0, type: 2}
   - {fileID: 11400000, guid: 2b702e98064b03b40866c08cbff5767e, type: 2}
+  spawnPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1433897128
 GameObject:
   m_ObjectHideFlags: 0
