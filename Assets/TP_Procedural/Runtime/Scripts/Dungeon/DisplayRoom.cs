@@ -32,6 +32,8 @@ public class DisplayRoom : MonoBehaviour {
             Vector2 positionRoom = new Vector2(node.PosX * sizeRoomX, node.PosY * sizeRoomY);
             GameObject a = Instantiate(GetRoom(node), positionRoom, Quaternion.identity);
             
+            a.GetComponent<Room>().position = new Vector2Int(node.PosX, node.PosY);
+            
             if (node.RoomTags.HasFlag(RoomTag.IsSpawn)) DungeonGenerator.Instance.spawnRoom = a;
             
             allRoomInDungeons.Add(a);
