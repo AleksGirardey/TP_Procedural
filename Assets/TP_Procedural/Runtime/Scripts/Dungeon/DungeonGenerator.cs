@@ -113,7 +113,7 @@ public class DungeonGenerator : MonoBehaviour {
                 spawnRoom.transform.position.x + 0.5f + _displayRoom.tailleX / 2,
                 spawnRoom.transform.position.y + 0.5f + _displayRoom.tailleY / 2, 1);
         _mainCameraFollow.target = _playerInstance;
-//        spawnRoom.GetComponent<Room>()?.OnEnterRoom();
+//w        spawnRoom.GetComponent<Room>()?.OnEnterRoom();
     }
     
     private void DisplayDungeon() {
