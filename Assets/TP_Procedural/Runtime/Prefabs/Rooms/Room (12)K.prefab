@@ -587,7 +587,7 @@ MonoBehaviour:
   m_tilemaps:
   - {fileID: 264897414613310382}
   - {fileID: 1683513713007355950}
-  m_selectedIndex: 0
+  m_selectedIndex: 1
   m_unselectedColorMultiplier: 1
   m_defaultTilemapWindowVisible: 0
   m_displayTilemapRList: 1
