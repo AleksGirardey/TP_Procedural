@@ -182,6 +182,7 @@
               <e p="Collectible" t="Include">
                 <e p="ACollectible.cs" t="Include" />
                 <e p="KeyCollectible.cs" t="Include" />
+                <e p="KeyEndLevel.cs" t="Include" />
               </e>
               <e p="Dungeon" t="Include">
                 <e p="DisplayRoom.cs" t="Include" />
@@ -197,6 +198,7 @@
                 <e p="Const.cs" t="Include" />
                 <e p="Door.cs" t="Include" />
                 <e p="Enemy.cs" t="Include" />
+                <e p="FloorSpiked.cs" t="Include" />
                 <e p="Room.cs" t="Include" />
                 <e p="Spike.cs" t="Include" />
               </e>
