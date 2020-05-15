@@ -11,7 +11,10 @@ public class FloorSpiked : MonoBehaviour {
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        spike.SetActive(true);
-        _collider.enabled = false;
+        if(collision.gameObject.tag == "Player")
+        {
+            spike.SetActive(true);
+            _collider.enabled = false;
+        }
     }
 }
