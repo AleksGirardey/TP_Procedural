@@ -10,7 +10,6 @@ public class FloorSpiked : MonoBehaviour {
     }
 
     private void OnTriggerExit2D(Collider2D collision) {
-        Debug.Log($"COUCOU : {collision.gameObject.tag}");    
         if (!collision.gameObject.CompareTag("Player")) return;
         
         spike.SetActive(true);
