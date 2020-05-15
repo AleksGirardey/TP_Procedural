@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using CreativeSpore.SuperTilemapEditor;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
@@ -12,6 +13,9 @@ public class GameManager : MonoBehaviour {
     public bool isPlayerDead;
 
     [HideInInspector] public GameObject spawnRoom;
+
+    public STETilemap floor;
+    
     
     private void Awake() {
         if (Instance == null) Instance = this;

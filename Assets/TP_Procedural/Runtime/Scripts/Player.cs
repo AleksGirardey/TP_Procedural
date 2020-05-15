@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using CreativeSpore.SuperTilemapEditor;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
@@ -88,9 +89,12 @@ public class Player : MonoBehaviour {
 	private Room _room = null;
 	public Room Room { get { return _room; } }
 
+    // Tilemap
+    private STETilemap _floor;
+    uint tileSpikes = 4;
 
-	// Use this for initialization
-	private void Awake () {
+    // Use this for initialization
+    private void Awake () {
         Instance = this;
         _body = GetComponent<Rigidbody2D>();
         GetComponentsInChildren<SpriteRenderer>(true, _spriteRenderers);
@@ -99,12 +103,15 @@ public class Player : MonoBehaviour {
     private void Start()
     {
         SetState(STATE.IDLE);
+        _floor = GameManager.Instance.floor;
     }
 
     // Update is called once per frame
     private void Update () {
         UpdateState();
         UpdateInputs();
+
+        //Tile tile = _floor.GetTile(new Vector2(this.transform.position.x, this.transform.position.y));
 	}
 
     // Update physics on FixedUpdate (FixedUpdate can be called multiple times a frame).
@@ -327,5 +334,10 @@ public class Player : MonoBehaviour {
             Attack attack = collision.gameObject.GetComponent<Attack>();
             ApplyHit(attack);
         }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        
     }
 }
