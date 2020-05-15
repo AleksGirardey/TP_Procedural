@@ -6,14 +6,16 @@ using UnityEngine;
 public class Room : MonoBehaviour {
 
     public bool isStartRoom;
+    public bool isHiddenRoom;
 	public Vector2Int position = Vector2Int.zero;
 
+	public Door hiddenDoor;
+	
 	private TilemapGroup _tilemapGroup;
 
 	public static List<Room> allRooms = new List<Room>();
 
-    void Awake()
-    {
+    private void Awake() {
 		_tilemapGroup = GetComponentInChildren<TilemapGroup>();
 		allRooms.Add(this);
 	}
@@ -36,8 +38,22 @@ public class Room : MonoBehaviour {
         Bounds cameraBounds = _GetWorldRoomBounds();
         cameraFollow.SetBounds(cameraBounds);
 		Player.Instance.EnterRoom(this);
+		if (isHiddenRoom) {
+			DisplayHiddenRoom();
+		}
     }
 
+	private void DisplayHiddenRoom() {
+		for (int i = 0; i < transform.childCount; i++) {
+			transform.GetChild(i).gameObject.SetActive(true);
+		}
+	}
+
+	public void SetHidden() {
+		for (int i = 0; i < transform.childCount; i++) {
+			transform.GetChild(i).gameObject.SetActive(false);
+		}
+	}
 
     private Bounds _GetLocalRoomBounds()
     {

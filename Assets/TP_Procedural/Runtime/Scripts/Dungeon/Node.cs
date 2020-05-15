@@ -11,16 +11,21 @@
     BottomDoorLocked = 128,
     LeftDoorLocked = 256,
     IsSpawn = 512,
-    IsExit = 1024
+    IsExit = 1024,
+    TopDoorHidden = 2048,
+    RightDoorHidden = 4096,
+    BottomDoorHidden = 8192,
+    LeftDoorHidden = 16384,
+    IsHidden = 32768
 }
-
 
 public enum RoomType
 {
     RoomWithKey,
     RoomStart,
     RoomEnd,
-    RoomClassic
+    RoomClassic,
+    RoomHidden
 }
 
 public class Node 

@@ -71,7 +71,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isStartRoom: 0
+  isHiddenRoom: 0
   position: {x: 1, y: 0}
+  hiddenDoor: {fileID: 0}
 --- !u!50 &6989465812386493588
 Rigidbody2D:
   serializedVersion: 4

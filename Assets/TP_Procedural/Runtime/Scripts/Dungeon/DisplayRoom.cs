@@ -4,24 +4,8 @@ using UnityEngine;
 public class DisplayRoom : MonoBehaviour {
     public int tailleX;
     public int tailleY;
-    public int cell;
-    public bool debug;
     List<GameObject> allRoomInDungeons = new List<GameObject>();
     public List<RoomSettings> roomPrefabs = new List<RoomSettings>();
-
-    public Vector3 spawnPosition;
-    
-    // private void Update()
-    // {
-    //     if (Input.GetKeyDown(KeyCode.Z)) {
-    //         Display(DungeonGenerator.Instance.dungeonMap, tailleX, tailleY);
-    //     }
-    //     if (Input.GetKeyDown(KeyCode.S))
-    //     {
-    //         DeleteDisplay();
-    //
-    //     }
-    // }
 
     public void Display() {
         Display(DungeonGenerator.Instance.dungeonMap, tailleX, tailleY);
@@ -35,9 +19,10 @@ public class DisplayRoom : MonoBehaviour {
             a.GetComponent<Room>().position = new Vector2Int(node.PosX, node.PosY);
             
             if (node.RoomTags.HasFlag(RoomTag.IsSpawn)) DungeonGenerator.Instance.spawnRoom = a;
-            
+
             allRoomInDungeons.Add(a);
             SetDoor(node, a);
+            if (node.RoomTags.HasFlag(RoomTag.IsHidden)) a.GetComponent<Room>().SetHidden();
         }
     }
 
@@ -62,8 +47,18 @@ public class DisplayRoom : MonoBehaviour {
                 case RoomType.RoomEnd:
                     isGoodRoom = CheckIsGoodRoom(node, roomS, RoomTag.IsExit);
                     break;
+                case RoomType.RoomHidden:
+                    if (node.RoomTags.HasFlag(RoomTag.TopDoorHidden) ||
+                        node.RoomTags.HasFlag(RoomTag.RightDoorHidden) ||
+                        node.RoomTags.HasFlag(RoomTag.BottomDoorHidden) ||
+                        node.RoomTags.HasFlag(RoomTag.LeftDoorHidden))
+                        isGoodRoom = roomS.Room;
+                    break;
                 case RoomType.RoomClassic:
-                    if(!node.RoomTags.HasFlag(RoomTag.IsSpawn) && !node.RoomTags.HasFlag(RoomTag.IsExit) && !node.RoomTags.HasFlag(RoomTag.HasKey))
+                    if(!node.RoomTags.HasFlag(RoomTag.IsSpawn) &&
+                       !node.RoomTags.HasFlag(RoomTag.IsExit) &&
+                       !node.RoomTags.HasFlag(RoomTag.IsHidden) &&
+                       !node.RoomTags.HasFlag(RoomTag.HasKey))
                         isGoodRoom = roomS.Room;
                     break;
                 default:
@@ -100,29 +95,26 @@ public class DisplayRoom : MonoBehaviour {
                 case Utils.ORIENTATION.NORTH:
                     SetDoor(node, doorArray[i], RoomTag.HasTopDoor, Door.STATE.OPEN);
                     SetDoor(node, doorArray[i], RoomTag.TopDoorLocked, Door.STATE.CLOSED);
+                    SetDoor(node, doorArray[i], RoomTag.TopDoorHidden, Door.STATE.SECRET);
                     break;
                 case Utils.ORIENTATION.EAST:
                     SetDoor(node, doorArray[i], RoomTag.HasRightDoor, Door.STATE.OPEN);
                     SetDoor(node, doorArray[i], RoomTag.RightDoorLocked, Door.STATE.CLOSED);
+                    SetDoor(node, doorArray[i], RoomTag.RightDoorHidden, Door.STATE.SECRET);
                     break;
                 case Utils.ORIENTATION.SOUTH:
                     SetDoor(node, doorArray[i], RoomTag.HasBottomDoor, Door.STATE.OPEN);
                     SetDoor(node, doorArray[i], RoomTag.BottomDoorLocked, Door.STATE.CLOSED);
+                    SetDoor(node, doorArray[i], RoomTag.BottomDoorHidden, Door.STATE.SECRET);
                     break;
                 case Utils.ORIENTATION.WEST:
                     SetDoor(node, doorArray[i], RoomTag.HasLeftDoor, Door.STATE.OPEN);
                     SetDoor(node, doorArray[i], RoomTag.LeftDoorLocked, Door.STATE.CLOSED);
+                    SetDoor(node, doorArray[i], RoomTag.LeftDoorHidden, Door.STATE.SECRET);
                     break;
                 default:
                     break;
             }
         }
     }
-
-    // private void OnDrawGizmos()
-    // {
-    //     if(debug) {
-    //         Display(DungeonGenerator.Instance.dungeonMap, tailleX, tailleY);
-    //     }
-    // }
 }

@@ -89,10 +89,6 @@ public class Player : MonoBehaviour {
 	private Room _room = null;
 	public Room Room { get { return _room; } }
 
-    // Tilemap
-    private STETilemap _floor;
-    uint tileSpikes = 4;
-
     // Use this for initialization
     private void Awake () {
         Instance = this;
@@ -103,7 +99,6 @@ public class Player : MonoBehaviour {
     private void Start()
     {
         SetState(STATE.IDLE);
-        _floor = GameManager.Instance.floor;
     }
 
     // Update is called once per frame
@@ -121,26 +116,21 @@ public class Player : MonoBehaviour {
 		FixedUpdateRoom();
 	}
 
-	private void FixedUpdateRoom()
-	{
-		Collider2D[] colliders = Physics2D.OverlapPointAll(transform.position);
-		if(colliders != null && colliders.Length > 0)
-		{
-			foreach(Collider2D collider in colliders)
-			{
-				if(collider.gameObject.tag == "Door")
-				{
-					Room room = collider.gameObject.GetComponentInParent<Room>();
-					if(room && room != _room)
-					{
-						room.OnEnterRoom();
-					}
-				}
-			}
-		}
-	}
+    private void FixedUpdateRoom() {
+        Collider2D[] colliders = Physics2D.OverlapPointAll(transform.position);
+        if (colliders != null && colliders.Length > 0) {
+            foreach (Collider2D collider in colliders) {
+                if (collider.gameObject.tag == "Door" || collider.gameObject.CompareTag("SecretRoom")) {
+                    Room room = collider.gameObject.GetComponentInParent<Room>();
+                    if (room && room != _room) {
+                        room.OnEnterRoom();
+                    }
+                }
+            }
+        }
+    }
 
-	// Update inputs
+    // Update inputs
 	private void UpdateInputs()
     {
         if (CanMove())

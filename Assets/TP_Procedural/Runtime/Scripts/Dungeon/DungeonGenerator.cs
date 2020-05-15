@@ -3,35 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class DungeonGenerator : MonoBehaviour {
     public static DungeonGenerator Instance;
 
     public bool applicationQuit;
-    public bool debug;
     [Header("-- Generation Parameters --")]
     public int maxIteration = 4;
 
     private GameObject _playerInstance;
     public GameObject prefabPlayer;
-    
-    public GameObject prefabSpawn;
-    public GameObject prefabBranch;
-    public GameObject prefabKey;
-    public GameObject prefabExit;
-    public GameObject prefabRoom;
-    public float tileLength;
-    public float offsetBetweenSprite;
-
-    public Text textTries;
     public List<Node> dungeonMap;
 
     private readonly List<Node> _waitingRoom = new List<Node>();
     
     private bool _isNewGeneration;
-    //private int _generationIteration;
     private Coroutine _generationCoroutine;
 
     private CameraFollow _mainCameraFollow;
@@ -108,12 +95,15 @@ public class DungeonGenerator : MonoBehaviour {
     private void SetPlayerPosition() {
         if (_playerInstance) DestroyImmediate(_playerInstance);
         _playerInstance = Instantiate(prefabPlayer);
+
+        Vector3 spawnRoomPosition = spawnRoom.transform.position;
+        
         _playerInstance.transform.position = 
             new Vector3(
-                spawnRoom.transform.position.x + 0.5f + _displayRoom.tailleX / 2,
-                spawnRoom.transform.position.y + 0.5f + _displayRoom.tailleY / 2, 1);
+                spawnRoomPosition.x + 0.5f + _displayRoom.tailleX / 2f,
+                spawnRoomPosition.y + 0.5f + _displayRoom.tailleY / 2f, 1);
         _mainCameraFollow.target = _playerInstance;
-//w        spawnRoom.GetComponent<Room>()?.OnEnterRoom();
+
     }
     
     private void DisplayDungeon() {
@@ -121,43 +111,6 @@ public class DungeonGenerator : MonoBehaviour {
         SetPlayerPosition();
         _isNewGeneration = false;
     }
-    
-    // private void DisplayDungeon() {
-    //     textTries.text = $"Level : {LevelParameters.Instance.currentLevel}\n" +
-    //                      $"  Essaies : {_generationIteration}\n" +
-    //                      $"  Level Size : {LevelParameters.Instance.levelSize} => {Mathf.RoundToInt(LevelParameters.Instance.levelSize)}\n" +
-    //                      $"  Branches : {LevelParameters.Instance.levelBranches} => {Mathf.RoundToInt(LevelParameters.Instance.levelBranches)}\n" +
-    //                      $"  Branches Length : {LevelParameters.Instance.levelBranchLength} => {Mathf.RoundToInt(LevelParameters.Instance.levelBranchLength)}\n";
-    //
-    //     foreach (Node node in dungeonMap) {
-    //         GameObject toGenerate;
-    //         if (node.RoomTags.HasFlag(RoomTag.IsSpawn))
-    //             toGenerate = prefabSpawn;
-    //         else if (node.IsBranch && !node.RoomTags.HasFlag(RoomTag.HasKey))
-    //             toGenerate = prefabBranch;
-    //         else if (node.RoomTags.HasFlag(RoomTag.HasKey))
-    //             toGenerate = prefabKey;
-    //         else if (node.RoomTags.HasFlag(RoomTag.IsExit))
-    //             toGenerate = prefabExit;
-    //         else
-    //             toGenerate = prefabRoom;
-    //
-    //         Vector3 position = new Vector3(
-    //             node.PosX * (tileLength + offsetBetweenSprite),
-    //             node.PosY * (tileLength + offsetBetweenSprite),
-    //             0);
-    //         
-    //         Instantiate(toGenerate, position, Quaternion.identity, transform);
-    //
-    //         if (!node.RoomTags.HasFlag(RoomTag.IsSpawn)) continue;
-    //
-    //         Transform cameraTransform = _mainCamera.transform;
-    //         
-    //         position.z = cameraTransform.position.z;
-    //         cameraTransform.position = position;
-    //     }
-    //     _isNewGeneration = false;
-    // }
 
     private void NewSeed() {
         Random.InitState(DateTime.Now.Millisecond);
@@ -190,7 +143,7 @@ public class DungeonGenerator : MonoBehaviour {
 
         for (int i = 0; i < length; i++) {
             lastLastNode = lastNode;
-            lastNode = DrawNode(lastNode, 0);
+            lastNode = DrawNode(lastNode, false, 0);
 
             if (lastNode == null) return null;
             
@@ -216,17 +169,19 @@ public class DungeonGenerator : MonoBehaviour {
     private bool GenerateBranches(List<Node> pathNodes, int branches) {
         List<Node> drawPool = pathNodes;
         bool keySet = false;
+        bool secretSet = false;
 
         drawPool = drawPool.Where(node => !node.RoomTags.HasFlag(RoomTag.IsExit)).ToList();
         int count = Mathf.Min(branches, drawPool.Count);
         for (int i = 0; i < count; i++) {
             int index = Random.Range(0, drawPool.Count);
             bool hasKey = !keySet && (i > count / 2 || Random.Range(0, 11) > 5);
+            bool hasSecret = !secretSet && (i > count / 2 || Random.Range(0, 100) > 35);
 
-            if (hasKey)
-                keySet = true;
+            if (hasKey) keySet = true;
+            if (hasSecret) secretSet = true;
             
-            if (!GenerateBranch(drawPool[index], hasKey, 0)) return false;
+            if (!GenerateBranch(drawPool[index], hasKey, hasSecret, 0)) return false;
 
             drawPool.RemoveAt(index);
         }
@@ -234,7 +189,7 @@ public class DungeonGenerator : MonoBehaviour {
         return true;
     }
     
-    private bool GenerateBranch(Node startNode, bool hasKey, int iteration) {
+    private bool GenerateBranch(Node startNode, bool hasKey, bool hasSecret, int iteration) {
         int length = Mathf.RoundToInt(LevelParameters.Instance.levelBranchLength);
         Node lastNode = startNode;
         bool doesBreak = false;
@@ -243,10 +198,10 @@ public class DungeonGenerator : MonoBehaviour {
         
         for (int i = 0; i < length; i++) {
             Node lastLastNode = lastNode;
-            lastNode = DrawNode(lastNode, 0);
+            lastNode = DrawNode(lastNode, false, 0);
 
             if (lastNode == null) {
-                if (!GenerateBranch(startNode, hasKey, iteration + 1) && i < length / 2)
+                if (!GenerateBranch(startNode, hasKey, hasSecret, iteration + 1) && i < length / 2)
                     return false;
                 doesBreak = true;
                 lastNode = lastLastNode;
@@ -260,21 +215,27 @@ public class DungeonGenerator : MonoBehaviour {
         }
         
         if (hasKey) lastNode.AddFlag(RoomTag.HasKey);
-
+        
+        if (!hasSecret) return true;
+        
+        lastNode = DrawNode(lastNode, true, 0);
+        if (lastNode == null) return false;
+        lastNode.AddFlag(RoomTag.IsHidden);
+        _waitingRoom.Add(lastNode);
         return true;
     }
 
-    private Node DrawNode(Node lastNode, int iteration) {
+    private Node DrawNode(Node lastNode, bool secretRoom, int iteration) {
         if (iteration > maxIteration) return null;
         
         List<Vector2> neighbors = new List<Vector2>();
         neighbors.AddRange(GetNeighbors(lastNode));
 
-        if (neighbors.Count == 0) return DrawNode(lastNode, iteration + 1);
+        if (neighbors.Count == 0) return DrawNode(lastNode, secretRoom, iteration + 1);
             
         Vector2 selectedNeighbor = neighbors[Random.Range(0, neighbors.Count)];
         
-        return CreateNode(selectedNeighbor, ref lastNode);
+        return CreateNode(selectedNeighbor, ref lastNode, secretRoom);
     }
 
     private Node GetNode(int x, int y) {
@@ -323,7 +284,7 @@ public class DungeonGenerator : MonoBehaviour {
         return spawn;
     }
 
-    private Node CreateNode(Vector2 position, ref Node lastNode) {
+    private Node CreateNode(Vector2 position, ref Node lastNode, bool secretRoom) {
         Node room = new Node {
             PosX = (int) position.x,
             PosY = (int) position.y
@@ -332,15 +293,35 @@ public class DungeonGenerator : MonoBehaviour {
         if (room.PosX == lastNode.PosX && room.PosY + 1 == lastNode.PosY) {
             room.AddFlag(RoomTag.HasTopDoor);
             lastNode.AddFlag(RoomTag.HasBottomDoor);
+            
+            if (!secretRoom) return room;
+            
+            room.AddFlag(RoomTag.TopDoorHidden);
+            lastNode.AddFlag(RoomTag.BottomDoorHidden);
         } else if (room.PosX == lastNode.PosX && room.PosY - 1 == lastNode.PosY) {
             room.AddFlag(RoomTag.HasBottomDoor);
             lastNode.AddFlag(RoomTag.HasTopDoor);
+
+            if (!secretRoom) return room;
+            
+            room.AddFlag(RoomTag.BottomDoorHidden);
+            lastNode.AddFlag(RoomTag.TopDoorHidden);
         } else if (room.PosX + 1 == lastNode.PosX && room.PosY == lastNode.PosY) {
             room.AddFlag(RoomTag.HasRightDoor);
             lastNode.AddFlag(RoomTag.HasLeftDoor);
+
+            if (!secretRoom) return room;
+            
+            room.AddFlag(RoomTag.RightDoorHidden);
+            lastNode.AddFlag(RoomTag.LeftDoorHidden);
         } else if (room.PosX - 1 == lastNode.PosX && room.PosY == lastNode.PosY) {
             room.AddFlag(RoomTag.HasLeftDoor);
             lastNode.AddFlag(RoomTag.HasRightDoor);
+
+            if (!secretRoom) return room;
+            
+            room.AddFlag(RoomTag.LeftDoorHidden);
+            lastNode.AddFlag(RoomTag.RightDoorHidden);
         }
 
         return room;
